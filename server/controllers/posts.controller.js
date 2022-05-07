@@ -27,6 +27,23 @@ exports.findById = (req, res) => {
   });
 };
 
+exports.findByTitle = (req, res) => {
+  const title = req.params.title;
+  Post.findByTitle(title, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).json({
+          message: `Not found post with title ${title}.`,
+        });
+      } else {
+        res.status(500).json({
+          message: "Error retrieving post with title " + title,
+        })
+      }
+    } else res.status(200).json(data);
+  });
+}
+
 exports.create = (req, res) => {
   Post.create(req.body, (err, data) => {
     if (err)

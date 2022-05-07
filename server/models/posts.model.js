@@ -43,6 +43,28 @@ Posts.findById = (postId, result) => {
   );
 };
 
+Posts.findByTitle = (title, result) => {
+  connection.query(
+    `SELECT * FROM blogs WHERE title LIKE '%${title}%' ORDER BY id DESC`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+      if (res.length) {
+        let i;
+        for (i = 0; i < res.length; i++) {
+          console.log("found post with title ", title);
+        }
+        result(null, res);
+        return;
+      }
+      result({ kind: "not_found" }, null);
+    }
+  )
+}
+
 Posts.create = (body, result) => {
   connection.query(
     "INSERT INTO blogs(title,author,description,content,img) VALUES (?,?,?,?,?)",
